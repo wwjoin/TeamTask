@@ -32,7 +32,7 @@ export default {
     data() {
         return {
             navList: [
-                {icon: '&#xe6fb;', name: 'dashboard', label: '仪表盘'},
+                {icon: '&#xe6fb;', name: 'dashboard', label: '首页'},
                 {icon: '&#xe6fa;', name: 'project', label: '项目'},
                 {icon: '&#xe6eb;', name: 'dialog', label: '消息'},
                 {icon: '&#xe6b2;', name: 'contacts', label: '通讯录'},

@@ -1,12 +1,16 @@
 <template>
-    <div class="page-manage" :class="{'show-tabbar': showMobileTabbar, 'not-logged': userId <= 0}">
-        <div class="manage-box-menu" :class="{'show-mobile-menu': showMobileMenu}">
+    <div class="page-manage" :class="{'show-tabbar': showMobileTabbar, 'not-logged': userId <= 0}" style="display: flex
+;flex-direction: column;">
+        <div style="border-bottom: 1px solid #f3f3f3;;background-color: white;height: 64px;width: 100vw;text-align: left;font-weight: 600;font-size: 16px;align-items: center; justify-content: space-between;display: flex
+" >
+            <span style="color: white;font-weight: bold;font-size: 20px;color: rgb(45, 45, 45);margin-left: 20px">项目协同系统</span>
             <Dropdown
                 class="page-manage-menu-dropdown main-menu"
                 trigger="click"
+                style="max-width: 210px;margin-right: 20px;"
                 @on-click="settingRoute"
                 @on-visible-change="menuVisibleChange">
-                <div :class="['manage-box-title', visibleMenu ? 'menu-visible' : '']">
+                <div :class="['manage-box-title', visibleMenu ? 'menu-visible' : '']" style="margin-top: 0px">
                     <div class="manage-box-avatar">
                         <UserAvatar :userid="userId" :size="36"/>
                     </div>
@@ -61,10 +65,10 @@
                             </DropdownItem>
                             <DropdownMenu slot="list">
                                 <DropdownItem name="allUser">{{$L('团队管理')}}</DropdownItem>
-                                <DropdownItem name="exportTask">{{$L('导出任务统计')}}</DropdownItem>
-                                <DropdownItem name="exportOverdueTask">{{$L('导出超期任务')}}</DropdownItem>
-                                <DropdownItem name="exportApprove">{{$L('导出审批数据')}}</DropdownItem>
-                                <DropdownItem name="exportCheckin">{{$L('导出签到数据')}}</DropdownItem>
+<!--                                <DropdownItem name="exportTask">{{$L('导出任务统计')}}</DropdownItem>-->
+<!--                                <DropdownItem name="exportOverdueTask">{{$L('导出超期任务')}}</DropdownItem>-->
+<!--                                <DropdownItem name="exportApprove">{{$L('导出审批数据')}}</DropdownItem>-->
+<!--                                <DropdownItem name="exportCheckin">{{$L('导出签到数据')}}</DropdownItem>-->
                             </DropdownMenu>
                         </Dropdown>
                         <!-- 其他菜单 -->
@@ -92,20 +96,41 @@
                     </template>
                 </DropdownMenu>
             </Dropdown>
+        </div>
+        <div style="display: flex;flex-direction: row;height: 100%">
+
+        <div class="manage-box-menu" :class="{'show-mobile-menu': showMobileMenu}" >
+            <ButtonGroup class="manage-box-new-group" style="border-bottom: 1px solid #f3f3f3;">
+                <Button class="manage-box-new" type="primary" icon="md-add" @click="onAddTask">{{$L('新建任务')}}</Button>
+<!--                <Dropdown @on-click="onAddMenu" trigger="click">-->
+<!--                    <Button type="primary">-->
+<!--                        <Icon type="ios-arrow-down"></Icon>-->
+<!--                    </Button>-->
+<!--                    <DropdownMenu slot="list">-->
+<!--                        <DropdownItem name="project">{{$L('新建项目')}} ({{mateName}}+B)</DropdownItem>-->
+<!--                        <DropdownItem name="task">{{$L('新建任务')}} ({{mateName}}+K)</DropdownItem>-->
+<!--                        <DropdownItem name="group">{{$L('创建群组')}} ({{mateName}}+U)</DropdownItem>-->
+<!--                        <DropdownItem name="createMeeting">{{$L('新会议')}} ({{mateName}}+J)</DropdownItem>-->
+<!--                        <DropdownItem name="joinMeeting">{{$L('加入会议')}}</DropdownItem>-->
+<!--                    </DropdownMenu>-->
+<!--                </Dropdown>-->
+            </ButtonGroup>
+
+
             <Scrollbar class-name="manage-item" @on-scroll="operateVisible = false">
                 <div class="menu-base">
                     <ul>
                         <li @click="toggleRoute('dashboard')" :class="classNameRoute('dashboard')">
                             <i class="taskfont">&#xe6fb;</i>
-                            <div class="menu-title">{{$L('仪表盘')}}</div>
+                            <div class="menu-title">{{$L('首页')}}</div>
                             <Badge v-if="dashboardTask.overdue_count > 0" class="menu-badge" type="error" :overflow-count="999" :count="dashboardTask.overdue_count"/>
                             <Badge v-else-if="dashboardTask.today_count > 0" class="menu-badge" type="info" :overflow-count="999" :count="dashboardTask.today_count"/>
                             <Badge v-else-if="dashboardTask.todo_count > 0" class="menu-badge" type="primary" :overflow-count="999" :count="dashboardTask.todo_count"/>
                         </li>
-                        <li @click="toggleRoute('calendar')" :class="classNameRoute('calendar')">
-                            <i class="taskfont">&#xe6f5;</i>
-                            <div class="menu-title">{{$L('日历')}}</div>
-                        </li>
+<!--                        <li @click="toggleRoute('calendar')" :class="classNameRoute('calendar')">-->
+<!--                            <i class="taskfont">&#xe6f5;</i>-->
+<!--                            <div class="menu-title">{{$L('日历')}}</div>-->
+<!--                        </li>-->
                         <li @click="toggleRoute('messenger')" :class="classNameRoute('messenger')">
                             <i class="taskfont">&#xe6eb;</i>
                             <div class="menu-title">{{$L('消息')}}</div>
@@ -115,11 +140,16 @@
                             <i class="taskfont">&#xe6f3;</i>
                             <div class="menu-title">{{$L('文件')}}</div>
                         </li>
-                        <li @click="toggleRoute('application')" :class="classNameRoute('application')">
-                            <i class="taskfont">&#xe60c;</i>
-                            <div class="menu-title">{{$L('应用')}}</div>
-                            <Badge class="menu-badge" :overflow-count="999" :text="String((reportUnreadNumber + approveUnreadNumber) || '')"/>
-                        </li>
+
+<!--                        <li @click="toggleRoute('file')" :class="classNameRoute('file')">-->
+<!--                            <i class="taskfont">&#xe6f3;</i>-->
+<!--                            <div class="menu-title">{{$L('项目')}}</div>-->
+<!--                        </li>-->
+<!--                        <li @click="toggleRoute('application')" :class="classNameRoute('application')">-->
+<!--                            <i class="taskfont">&#xe60c;</i>-->
+<!--                            <div class="menu-title">{{$L('应用')}}</div>-->
+<!--                            <Badge class="menu-badge" :overflow-count="999" :text="String((reportUnreadNumber + approveUnreadNumber) || '')"/>-->
+<!--                        </li>-->
                     </ul>
                 </div>
                 <div ref="menuProject" class="menu-project">
@@ -179,21 +209,7 @@
                 </div>
                 <Input v-model="projectKeyValue" :placeholder="$L(`共${projectTotal || cacheProjects.length}个项目，搜索...`)" clearable/>
             </div>
-            <ButtonGroup class="manage-box-new-group">
-                <Button class="manage-box-new" type="primary" icon="md-add" @click="onAddShow">{{$L('新建项目')}}</Button>
-                <Dropdown @on-click="onAddMenu" trigger="click">
-                    <Button type="primary">
-                        <Icon type="ios-arrow-down"></Icon>
-                    </Button>
-                    <DropdownMenu slot="list">
-                        <DropdownItem name="project">{{$L('新建项目')}} ({{mateName}}+B)</DropdownItem>
-                        <DropdownItem name="task">{{$L('新建任务')}} ({{mateName}}+K)</DropdownItem>
-                        <DropdownItem name="group">{{$L('创建群组')}} ({{mateName}}+U)</DropdownItem>
-                        <DropdownItem name="createMeeting">{{$L('新会议')}} ({{mateName}}+J)</DropdownItem>
-                        <DropdownItem name="joinMeeting">{{$L('加入会议')}}</DropdownItem>
-                    </DropdownMenu>
-                </Dropdown>
-            </ButtonGroup>
+
         </div>
 
         <div class="manage-box-main">
@@ -201,6 +217,8 @@
                 <router-view class="manage-box-view" @on-click="onTabbarClick"></router-view>
             </keep-alive>
         </div>
+        </div>
+
 
         <!--新建项目-->
         <Modal
