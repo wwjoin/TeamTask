@@ -48,7 +48,6 @@ services:
       - drawio-webapp
       - drawio-export
       - minder
-      - okr
       - ai
     restart: unless-stopped
 
@@ -178,28 +177,6 @@ services:
     depends_on:
       - redis
     restart: unless-stopped
-
-  okr:
-    container_name: "dootask-okr-${APP_ID}"
-    image: "kuaifan/doookr:0.4.5"
-    environment:
-      TZ: "${TIMEZONE:-PRC}"
-      DOO_TASK_URL: "http://${APP_IPPR}.3"
-      MYSQL_HOST: "${DB_HOST}"
-      MYSQL_PORT: "${DB_PORT}"
-      MYSQL_DBNAME: "${DB_DATABASE}"
-      MYSQL_USERNAME: "${DB_USERNAME}"
-      MYSQL_PASSWORD: "${DB_PASSWORD}"
-      MYSQL_PREFIX: "${DB_PREFIX}"
-      DEMO_DATA: true
-      KEY: ${APP_KEY}
-    networks:
-      extnetwork:
-        ipv4_address: "${APP_IPPR}.13"
-    depends_on:
-      - mariadb
-    restart: unless-stopped
-
   face:
     container_name: "dootask-face-${APP_ID}"
     image: "hitosea2020/dooface:0.0.1"

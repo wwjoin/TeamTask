@@ -40,7 +40,7 @@
                             type="circle"
                             trail-color="rgba(132, 197, 106, 0.2)"
                             :trail-width="7"
-                            :stroke-color="item.task_percent === 100 ? 'rgba(132, 197, 106, 0)' : '#84C56A'"
+                            :stroke-color="item.task_percent === 100 ? 'rgba(132, 197, 106, 0)' : '#4b70f3'"
                             :stroke-width="7"
                             :percent="item.task_percent"
                             :size="44">

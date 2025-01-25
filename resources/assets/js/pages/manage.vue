@@ -3,7 +3,10 @@
 ;flex-direction: column;">
         <div style="border-bottom: 1px solid #f3f3f3;;background-color: white;height: 64px;width: 100vw;text-align: left;font-weight: 600;font-size: 16px;align-items: center; justify-content: space-between;display: flex
 " >
-            <span style="color: white;font-weight: bold;font-size: 20px;color: rgb(45, 45, 45);margin-left: 20px">项目协同系统</span>
+            <div style="display: flex;align-items: center;">
+                <img src="/images/logo.svg" class="apps-logo" alt="logo" style="width:30px;height:30px;margin-left: 20px;" />
+                <span style="color: white;font-weight: bold;font-size: 20px;color: rgb(45, 45, 45);margin-left: 5px">项目协同系统</span>
+            </div>
             <Dropdown
                 class="page-manage-menu-dropdown main-menu"
                 trigger="click"
@@ -21,7 +24,7 @@
                         <Icon type="ios-arrow-down" />
                     </div>
                 </div>
-                <DropdownMenu slot="list">
+                <DropdownMenu slot="list" >
                     <template v-for="item in menu">
                         <!--最近打开的任务-->
                         <Dropdown
@@ -127,6 +130,11 @@
                             <Badge v-else-if="dashboardTask.today_count > 0" class="menu-badge" type="info" :overflow-count="999" :count="dashboardTask.today_count"/>
                             <Badge v-else-if="dashboardTask.todo_count > 0" class="menu-badge" type="primary" :overflow-count="999" :count="dashboardTask.todo_count"/>
                         </li>
+                        <li @click="toggleRoute('project-boards')" :class="classNameRoute('project-boards')">
+                            <i class="taskfont">&#xe60c;</i>
+                            <div class="menu-title">{{$L('项目')}}</div>
+                        </li>
+
 <!--                        <li @click="toggleRoute('calendar')" :class="classNameRoute('calendar')">-->
 <!--                            <i class="taskfont">&#xe6f5;</i>-->
 <!--                            <div class="menu-title">{{$L('日历')}}</div>-->
@@ -145,45 +153,45 @@
 <!--                            <i class="taskfont">&#xe6f3;</i>-->
 <!--                            <div class="menu-title">{{$L('项目')}}</div>-->
 <!--                        </li>-->
-<!--                        <li @click="toggleRoute('application')" :class="classNameRoute('application')">-->
-<!--                            <i class="taskfont">&#xe60c;</i>-->
-<!--                            <div class="menu-title">{{$L('应用')}}</div>-->
-<!--                            <Badge class="menu-badge" :overflow-count="999" :text="String((reportUnreadNumber + approveUnreadNumber) || '')"/>-->
-<!--                        </li>-->
-                    </ul>
-                </div>
-                <div ref="menuProject" class="menu-project">
-                    <ul>
-                        <li
-                            v-for="(item, key) in projectLists"
-                            :ref="`project_${item.id}`"
-                            :key="key"
-                            :class="classNameProject(item)"
-                            :data-id="item.id"
-                            @click="toggleRoute('project', {projectId: item.id})"
-                            v-longpress="handleLongpress">
-                            <div class="project-h1">
-                                <em @click.stop="toggleOpenMenu(item.id)"></em>
-                                <div class="title">{{item.name}}</div>
-                                <div v-if="item.top_at" class="icon-top"></div>
-                                <div v-if="item.task_my_num - item.task_my_complete > 0" class="num">{{item.task_my_num - item.task_my_complete}}</div>
-                            </div>
-                            <div class="project-h2">
-                                <p>
-                                    <em>{{$L('我的')}}:</em>
-                                    <span>{{item.task_my_complete}}/{{item.task_my_num}}</span>
-                                    <Progress :percent="item.task_my_percent" :stroke-width="6" />
-                                </p>
-                                <p>
-                                    <em>{{$L('全部')}}:</em>
-                                    <span>{{item.task_complete}}/{{item.task_num}}</span>
-                                    <Progress :percent="item.task_percent" :stroke-width="6" />
-                                </p>
-                            </div>
+                        <li @click="toggleRoute('application')" :class="classNameRoute('application')">
+                            <i class="taskfont">&#xe60c;</i>
+                            <div class="menu-title">{{$L('应用')}}</div>
+                            <Badge class="menu-badge" :overflow-count="999" :text="String((reportUnreadNumber + approveUnreadNumber) || '')"/>
                         </li>
-                        <li v-if="projectKeyLoading > 0" class="loading"><Loading/></li>
                     </ul>
                 </div>
+<!--                <div ref="menuProject" class="menu-project">-->
+<!--                    <ul>-->
+<!--                        <li-->
+<!--                            v-for="(item, key) in projectLists"-->
+<!--                            :ref="`project_${item.id}`"-->
+<!--                            :key="key"-->
+<!--                            :class="classNameProject(item)"-->
+<!--                            :data-id="item.id"-->
+<!--                            @click="toggleRoute('project', {projectId: item.id})"-->
+<!--                            v-longpress="handleLongpress">-->
+<!--                            <div class="project-h1">-->
+<!--                                <em @click.stop="toggleOpenMenu(item.id)"></em>-->
+<!--                                <div class="title">{{item.name}}</div>-->
+<!--                                <div v-if="item.top_at" class="icon-top"></div>-->
+<!--                                <div v-if="item.task_my_num - item.task_my_complete > 0" class="num">{{item.task_my_num - item.task_my_complete}}</div>-->
+<!--                            </div>-->
+<!--                            <div class="project-h2">-->
+<!--                                <p>-->
+<!--                                    <em>{{$L('我的')}}:</em>-->
+<!--                                    <span>{{item.task_my_complete}}/{{item.task_my_num}}</span>-->
+<!--                                    <Progress :percent="item.task_my_percent" :stroke-width="6" />-->
+<!--                                </p>-->
+<!--                                <p>-->
+<!--                                    <em>{{$L('全部')}}:</em>-->
+<!--                                    <span>{{item.task_complete}}/{{item.task_num}}</span>-->
+<!--                                    <Progress :percent="item.task_percent" :stroke-width="6" />-->
+<!--                                </p>-->
+<!--                            </div>-->
+<!--                        </li>-->
+<!--                        <li v-if="projectKeyLoading > 0" class="loading"><Loading/></li>-->
+<!--                    </ul>-->
+<!--                </div>-->
             </Scrollbar>
             <div class="operate-position" :style="operateStyles" v-show="operateVisible">
                 <Dropdown
@@ -639,7 +647,7 @@ export default {
                     {path: 'archivedProject', name: '已归档的项目'},
 
                     {path: 'team', name: '团队管理', divided: true},
-                    {path: 'complaint', name: '举报管理'},
+                    // {path: 'complaint', name: '举报管理'},
                 ])
             } else {
                 array.push(...[

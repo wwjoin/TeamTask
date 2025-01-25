@@ -119,7 +119,7 @@ export default {
         ...mapState(['userInfo', 'formOptions']),
 
         appTitle() {
-            return window.systemInfo.title || "DooTask";
+            return window.systemInfo.title || "TeamTask";
         },
     },
 

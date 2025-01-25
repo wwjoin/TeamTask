@@ -167,7 +167,7 @@ export default {
             outline: none;
 
             &:focus {
-                border-color: #84C56A;
+                border-color: #4b70f3;
             }
         }
     }
@@ -226,7 +226,7 @@ export default {
             }
 
             .tag-check {
-                color: #84C56A;
+                color: #4b70f3;
                 margin-left: 12px;
                 height: 20px;
                 display: flex;
@@ -252,12 +252,12 @@ export default {
             justify-content: center;
             padding: 4px 0 2px;
             cursor: pointer;
-            color: #84C56A;
+            color: #4b70f3;
             border-radius: 6px;
             transition: color 0.2s;
 
             &:hover {
-                color: #a2d98d;
+                color: #5B8FF9;
             }
 
             i {

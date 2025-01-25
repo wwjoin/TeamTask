@@ -16,6 +16,8 @@
     @endif
     <link rel="stylesheet" type="text/css" href="{{ asset_main('css/iview.css') }}?v={{ $version }}">
     <link rel="stylesheet" type="text/css" href="{{ asset_main('css/loading.css') }}?v={{ $version }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset_main('css/app.css') }}?v={{ $version }}">
+
     <script src="{{ asset_main('js/loading-theme.js') }}?v={{ $version }}"></script>
     <script src="{{ asset_main('js/jsencrypt.min.js') }}?v={{ $version }}"></script>
     <script src="{{ asset_main('js/scroll-into-view.min.js') }}?v={{ $version }}"></script>

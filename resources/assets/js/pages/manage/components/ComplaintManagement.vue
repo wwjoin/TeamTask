@@ -210,7 +210,7 @@ export default {
                                 style: {
                                     fontSize: '13px',
                                     cursor: 'pointer',
-                                    color: '#84C56A',
+                                    color: '#4b70f3',
                                 },
                                 on: {
                                     'on-ok': () => {

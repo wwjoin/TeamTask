@@ -69,9 +69,9 @@ export default {
                         if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                             try {
                                 if(/Android/i.test(navigator.userAgent)){
-                                    window.open("dootask://" + route.fullPath)
+                                    window.open("teamtask://" + route.fullPath)
                                 }else{
-                                    window.location.href = "dootask://" + route.fullPath
+                                    window.location.href = "teamtask://" + route.fullPath
                                 }
                             } catch (error) {}
                         }

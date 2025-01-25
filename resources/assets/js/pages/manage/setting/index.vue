@@ -9,8 +9,7 @@
             </div>
         </div>
         <div class="setting-box">
-            <div class="setting-menu">
-                <MobileNavTitle :title="$L('设置')"/>
+            <div class="setting-tabs">
                 <ul>
                     <li
                         v-for="(item, key) in menu"
@@ -30,8 +29,6 @@
             </div>
             <transition :name="$isEEUiApp ? 'mobile-dialog' : 'none'">
                 <div v-if="showContent" class="setting-content">
-                    <MobileNavTitle :title="settingTitleName"/>
-                    <div class="setting-content-title">{{titleNameRoute}}</div>
                     <div class="setting-content-view">
                         <router-view class="setting-router-view"></router-view>
                     </div>
@@ -40,6 +37,80 @@
         </div>
     </div>
 </template>
+
+<style lang="scss" scoped>
+.page-setting {
+    height: 100%;
+    background: #fff;
+    border-radius: 8px;
+
+    .setting-box {
+        display: flex;
+        flex-direction: column;
+        height: calc(100% - 60px);
+
+        .setting-tabs {
+            padding: 0 20px;
+            border-bottom: 1px solid #eee;
+
+            ul {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                padding: 10px 0;
+                list-style: none;
+
+                .tab-item {
+                    padding: 8px 16px;
+                    cursor: pointer;
+                    border-radius: 4px;
+                    transition: all 0.3s;
+
+                    &:hover {
+                        background: #f5f5f5;
+                    }
+
+                    &.active {
+                        background: #e6f7ff;
+                        color: #1890ff;
+                    }
+
+                    &.divided {
+                        position: relative;
+                        margin-left: 10px;
+
+                        &:before {
+                            content: '';
+                            position: absolute;
+                            left: -10px;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            width: 1px;
+                            height: 14px;
+                            background: #eee;
+                        }
+                    }
+                }
+            }
+        }
+
+        .setting-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            padding: 20px;
+
+            .setting-content-view {
+                flex: 1;
+                overflow-y: auto;
+                max-width: 800px;
+                padding-left: 32px;
+            }
+        }
+    }
+}
+</style>
 
 <script>
 import {mapState} from "vuex";
@@ -205,8 +276,8 @@ export default {
 
         classNameRoute(path, divided) {
             return {
-                "flex": true,
-                "active": this.windowLandscape && this.routeName === `manage-setting-${path}`,
+                "tab-item": true,
+                "active": this.routeName === `manage-setting-${path}`,
                 "divided": !!divided
             };
         },

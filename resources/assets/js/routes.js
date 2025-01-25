@@ -24,6 +24,12 @@ export default [
                 path: 'dashboard',
                 component: () => import('./pages/manage/dashboard.vue'),
             },
+
+            {
+                name: 'manage-project-boards',
+                path: 'project-boards',
+                component: () => import('./pages/manage/projectBoards.vue'),
+            },
             {
                 name: 'manage-calendar',
                 path: 'calendar',

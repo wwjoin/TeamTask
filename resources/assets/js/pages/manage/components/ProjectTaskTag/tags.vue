@@ -19,7 +19,7 @@ export default {
         },
         defaultColor: {
             type: String,
-            default: '#84C56A'
+            default: '#4b70f3'
         }
     },
     computed: {

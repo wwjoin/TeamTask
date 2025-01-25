@@ -233,7 +233,7 @@ export default {
                             "forcesave": true,
                             "help": false,
                         },
-                        "callbackUrl": `http://nginx/api/file/content/office?id=${codeId}&dootask-token=${this.userToken}`,
+                        "callbackUrl": `http://nginx/api/file/content/office?id=${codeId}&teamtask-token=${this.userToken}`,
                     },
                     "events": {
                         "onDocumentReady": this.onDocumentReady,

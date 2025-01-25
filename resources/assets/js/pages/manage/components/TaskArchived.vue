@@ -153,7 +153,7 @@ export default {
                                 style: {
                                     fontSize: '13px',
                                     cursor: 'pointer',
-                                    color: '#84C56A',
+                                    color: '#4b70f3',
                                 },
                                 on: {
                                     'click': () => {
@@ -176,7 +176,7 @@ export default {
                                     marginLeft: '6px',
                                     fontSize: '13px',
                                     cursor: 'pointer',
-                                    color: '#84C56A',
+                                    color: '#4b70f3',
                                 },
                                 on: {
                                     'on-ok': () => {
@@ -211,14 +211,14 @@ export default {
                                             })
                                         }
                                     },
-                                }, 
-                                [ 
+                                },
+                                [
                                     params.row.__restorePoptipLoadIng ? h('Loading', {
                                         style: {
                                             width: '26px',
                                             height: '15px',
                                         },
-                                    }) : this.$L('还原') 
+                                    }) : this.$L('还原')
                                 ])
                             ]),
                             h('Poptip', {

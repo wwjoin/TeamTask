@@ -21,7 +21,7 @@ import {convertLocalResourcePath} from "../components/Replace/utils";
             if (str == "privacy") {
                 const apiHome = $A.getDomain(window.systemInfo.apiUrl)
                 if (apiHome == "" || apiHome == "public") {
-                    return "https://www.dootask.com/privacy.html"
+                    return "https://www.teamtask.com/privacy.html"
                 }
                 str = "../privacy.html"
             }
@@ -502,7 +502,7 @@ import {convertLocalResourcePath} from "../components/Replace/utils";
          */
         isDooServer() {
             const u = $A.getDomain($A.mainUrl())
-            return /dootask\.com$/.test(u)
+            return /teamtask\.com$/.test(u)
                 || /hitosea\.com$/.test(u)
                 || /^127\.0\.0\.1/.test(u)
                 || /^(10)\./.test(u)

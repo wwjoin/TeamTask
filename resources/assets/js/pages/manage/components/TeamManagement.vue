@@ -76,7 +76,7 @@
                                 {{$L("身份")}}
                             </div>
                             <div class="search-content">
-                                <Select v-model="keys.identity" :placeholder="$L('全部')">
+                                <Select v-model="keys.identity" :placeholder="$L('全部')" style="width: 130px">
                                     <Option value="">{{$L('全部')}}</Option>
                                     <Option value="admin">{{$L('管理员')}}</Option>
                                     <Option value="noadmin">{{$L('非管理员')}}</Option>
@@ -90,7 +90,7 @@
                                 {{$L("在职状态")}}
                             </div>
                             <div class="search-content">
-                                <Select v-model="keys.disable" :placeholder="$L('在职')">
+                                <Select v-model="keys.disable" :placeholder="$L('在职')" style="width: 130px">
                                     <Option value="">{{$L('在职')}}</Option>
                                     <Option value="yes">{{$L('离职')}}</Option>
                                     <Option value="all">{{$L('全部')}}</Option>
@@ -103,7 +103,7 @@
                                     {{$L("人脸图片")}}
                                 </div>
                                 <div class="search-content">
-                                    <Select v-model="keys.checkin_face" :placeholder="$L('全部')">
+                                    <Select v-model="keys.checkin_face" :placeholder="$L('全部')" style="width: 130px">
                                         <Option value="">{{$L('全部')}}</Option>
                                         <Option value="yes">{{$L('已上传')}}</Option>
                                         <Option value="no">{{$L('未上传')}}</Option>
@@ -115,7 +115,7 @@
                                     {{$L("MAC地址")}}
                                 </div>
                                 <div class="search-content">
-                                    <Input v-model="keys.checkin_mac" :placeholder="$L('MAC地址')" clearable/>
+                                    <Input v-model="keys.checkin_mac" :placeholder="$L('MAC地址')" clearable style="width: 130px"/>
                                 </div>
                             </li>
                         </template>
@@ -124,7 +124,7 @@
                                 {{$L("邮箱认证")}}
                             </div>
                             <div class="search-content">
-                                <Select v-model="keys.email_verity" :placeholder="$L('全部')">
+                                <Select v-model="keys.email_verity" :placeholder="$L('全部')" style="width: 130px">
                                     <Option value="">{{$L('全部')}}</Option>
                                     <Option value="yes">{{$L('已邮箱认证')}}</Option>
                                     <Option value="no">{{$L('未邮箱认证')}}</Option>
@@ -143,6 +143,9 @@
                                     <Button v-else :loading="loadIng > 0" type="text" @click="getLists">{{$L('刷新')}}</Button>
                                 </div>
                             </Tooltip>
+                        </li>
+                        <li class="search-button">
+                            <Button :loading="loadIng > 0" type="primary" icon="md-add" @click="onShowAddUser(null)">{{$L('添加用户')}}</Button>
                         </li>
                     </ul>
                 </div>
@@ -331,6 +334,26 @@
                 </Poptip>
             </div>
         </Modal>
+
+        <!--添加用户-->
+        <Modal
+            v-model="addUserShow"
+            :title="$L('添加用户')">
+            <Form :model="addUserData" label-width="auto" @submit.native.prevent>
+                <FormItem prop="name" :label="$L('邮箱')">
+                    <Input type="text" v-model="addUserData.email" :placeholder="$L('请输入电子邮箱')"></Input>
+                </FormItem>
+                <FormItem prop="name" :label="$L('密码')">
+                    <Input type="text" v-model="addUserData.password" :placeholder="$L('请输入密码')"></Input>
+                </FormItem>
+            </Form>
+            <div slot="footer" class="adaption">
+                <Button type="default" @click="addUserShow=false">{{$L('取消')}}</Button>
+                <Button type="primary" :loading="addUserEditLoading > 0" @click="onSaveUser(addUserData, true)">{{$L('保存')}}</Button>
+            </div>
+        </Modal>
+
+        <!--添加用户结束-->
     </div>
 </template>
 
@@ -794,6 +817,12 @@ export default {
                 dialog_group: 'new',
                 dialog_useid: 0
             },
+
+            addUserData:{
+                email:'',  //账号
+                password:'',   //密码
+            },
+
             departmentList: [],
 
             dialogLoad: false,
@@ -1227,7 +1256,49 @@ export default {
             }, data || {})
             this.departmentShow = true
         },
+        //添加用户的弹框
+        onShowAddUser(data){
+            this.addUserData = Object.assign({
+                email: '',
+                password: '',
+            }, data || {})
+            this.addUserShow = true
+        },
 
+        // 添加用户操作
+        onSaveUser(){
+
+            this.addUserLoading++;
+            //基础判断
+            if (!$A.isEmail(this.addUserData.email)) {
+                $A.messageWarning("请输入正确的邮箱地址")
+                // this.$refs.email.focus()
+                return
+            }
+            if (!this.addUserData.password) {
+                $A.messageWarning("请输入密码")
+                // this.$refs.password.focus()
+                return
+            }
+
+            //网络请求
+            this.$store.dispatch("call", {
+                url: 'users/login',
+                data: Object.assign(this.addUserData,
+                    {
+                        type: 'reg',
+                    }
+                ),
+            }).then(({msg}) => {
+                $A.messageSuccess(msg)
+                this.getLists()  //重新刷新数据
+                this.addUserShow = false
+            }).catch(({msg}) => {
+                $A.modalError(msg);
+            }).finally(_ => {
+                this.addUserLoading--;
+            })
+        },
         onSaveDepartment() {
             this.departmentLoading++;
             this.$store.dispatch("call", {
