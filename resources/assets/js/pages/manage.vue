@@ -4,7 +4,7 @@
         <div style="border-bottom: 1px solid #f3f3f3;;background-color: white;height: 64px;width: 100vw;text-align: left;font-weight: 600;font-size: 16px;align-items: center; justify-content: space-between;display: flex
 " >
             <div style="display: flex;align-items: center;">
-                <img src="/images/logo.svg" class="apps-logo" alt="logo" style="width:30px;height:30px;margin-left: 20px;" />
+                <img src="/images/app-logo.svg" class="apps-logo" alt="logo" style="width:30px;height:30px;margin-left: 20px;" />
                 <span style="color: white;font-weight: bold;font-size: 20px;color: rgb(45, 45, 45);margin-left: 5px">项目协同系统</span>
             </div>
             <Dropdown
@@ -153,11 +153,11 @@
 <!--                            <i class="taskfont">&#xe6f3;</i>-->
 <!--                            <div class="menu-title">{{$L('项目')}}</div>-->
 <!--                        </li>-->
-                        <li @click="toggleRoute('application')" :class="classNameRoute('application')">
-                            <i class="taskfont">&#xe60c;</i>
-                            <div class="menu-title">{{$L('应用')}}</div>
-                            <Badge class="menu-badge" :overflow-count="999" :text="String((reportUnreadNumber + approveUnreadNumber) || '')"/>
-                        </li>
+<!--                        <li @click="toggleRoute('application')" :class="classNameRoute('application')">-->
+<!--                            <i class="taskfont">&#xe60c;</i>-->
+<!--                            <div class="menu-title">{{$L('应用')}}</div>-->
+<!--                            <Badge class="menu-badge" :overflow-count="999" :text="String((reportUnreadNumber + approveUnreadNumber) || '')"/>-->
+<!--                        </li>-->
                     </ul>
                 </div>
 <!--                <div ref="menuProject" class="menu-project">-->
@@ -366,6 +366,76 @@
         <DrawerOverlay v-model="approveDetailsShow" placement="right" :size="600">
             <ApproveDetails v-if="approveDetailsShow" :data="approveDetails" @onBack="approveDetailsShow=false"/>
         </DrawerOverlay>
+
+        <!--邮件-->
+        <DrawerOverlay v-model="mailShow" placement="right" :size="700">
+            <div class="ivu-modal-wrap-apply">
+                <div class="ivu-modal-wrap-apply-title">
+                    {{ $L('邮件通知') }}
+                </div>
+                <div class="ivu-modal-wrap-apply-body">
+                    <SystemEmailSetting />
+                </div>
+            </div>
+        </DrawerOverlay>
+
+        <!--AI 机器人-->
+        <DrawerOverlay v-model="aibotShow" placement="right" :size="720">
+            <div class="ivu-modal-wrap-apply">
+                <div class="ivu-modal-wrap-apply-title">
+                    {{ $L('AI 机器人') }}
+                    <p @click="aibotType = aibotType == 1 ? 2 : 1" v-if="userIsAdmin">
+                        {{ aibotType == 1 ? $L('机器人设置') : $L('返回') }}
+                    </p>
+                </div>
+                <div class="ivu-modal-wrap-apply-body">
+                    <ul class="ivu-modal-wrap-ul" v-if="aibotType == 1">
+                        <li v-for="(item, key) in aibotList"  :key="key">
+                            <img class="apply-icon" :src="item.src">
+                            <h4>{{ item.label }}</h4>
+                            <p class="desc" @click="openDetail(item.desc)">{{ item.desc }}</p>
+                            <p class="btn" @click="onGoToChat(item.value)">{{ $L('开始聊天') }}</p>
+                            <div class="load" v-if="aibotDialogSearchLoad == item.value">
+                                <Loading />
+                            </div>
+                        </li>
+                    </ul>
+                    <Tabs v-else v-model="aibotTabAction" class="ai-tabs">
+                        <TabPane label="ChatGPT" name="opanai">
+                            <div class="aibot-warp">
+                                <SystemAibot type="ChatGPT" v-if="aibotTabAction == 'opanai'" />
+                            </div>
+                        </TabPane>
+                        <TabPane label="Claude" name="claude">
+                            <div class="aibot-warp">
+                                <SystemAibot type="Claude" v-if="aibotTabAction == 'claude'" />
+                            </div>
+                        </TabPane>
+                        <TabPane label="Gemini" name="gemini">
+                            <div class="aibot-warp">
+                                <SystemAibot type="Gemini" v-if="aibotTabAction == 'gemini'" />
+                            </div>
+                        </TabPane>
+                        <TabPane :label="$L('智谱清言')" name="zhipu">
+                            <div class="aibot-warp">
+                                <SystemAibot type="Zhipu" v-if="aibotTabAction == 'zhipu'" />
+                            </div>
+                        </TabPane>
+                        <TabPane :label="$L('文心一言')" name="wenxin">
+                            <div class="aibot-warp">
+                                <SystemAibot type="Wenxin" v-if="aibotTabAction == 'wenxin'" />
+                            </div>
+                        </TabPane>
+                        <TabPane :label="$L('通义千问')" name="qianwen">
+                            <div class="aibot-warp">
+                                <SystemAibot type="Qianwen" v-if="aibotTabAction == 'qianwen'" />
+                            </div>
+                        </TabPane>
+                    </Tabs>
+                </div>
+            </div>
+        </DrawerOverlay>
+
     </div>
 </template>
 
@@ -393,9 +463,13 @@ import ImgUpload from "../components/ImgUpload.vue";
 import ApproveDetails from "./manage/approve/details.vue";
 import notificationKoro from "notification-koro1";
 import emitter from "../store/events";
+import SystemEmailSetting from "./manage/setting/components/SystemEmailSetting.vue";
+import SystemAibot from "./manage/setting/components/SystemAibot.vue";
 
 export default {
     components: {
+        SystemAibot,
+        SystemEmailSetting,
         ApproveDetails,
         ImgUpload,
         UserSelect,
@@ -419,7 +493,12 @@ export default {
     directives: {longpress},
     data() {
         return {
+
+
             loadIng: 0,
+
+            mailType: 1,
+            mailShow: false,
 
             mateName: /macintosh|mac os x/i.test(navigator.userAgent) ? '⌘' : 'Ctrl',
 
@@ -474,6 +553,49 @@ export default {
 
             approveDetails: {id: 0},
             approveDetailsShow: false,
+
+            aibotList: [
+                {
+                    value: "openai",
+                    label: "ChatGPT",
+                    src: $A.mainUrl('images/avatar/default_openai.png'),
+                    desc: this.$L('我是一个人工智能助手，为用户提供问题解答和指导。我没有具体的身份，只是一个程序。您有什么问题可以问我哦？')
+                },
+                {
+                    value: "claude",
+                    label: "Claude",
+                    src: $A.mainUrl('images/avatar/default_claude.png'),
+                    desc: this.$L('我是Claude,一个由Anthropic公司创造出来的AI助手机器人。我的工作是帮助人类,与人对话并给出解答。')
+                },
+                {
+                    value: "gemini",
+                    label: "Gemini",
+                    src: $A.mainUrl('images/avatar/default_gemini.png'),
+                    desc: `${this.$L('我是由Google开发的生成式人工智能聊天机器人。')}${this.$L('它基于同名的Gemini系列大型语言模型。')}${this.$L('是应对OpenAI公司开发的ChatGPT聊天机器人的崛起而开发的。')}`
+                },
+                {
+                    value: "zhipu",
+                    label: "Zhipu",
+                    src: $A.mainUrl('images/avatar/default_zhipu.png'),
+                    desc: `${this.$L('我是智谱清言，是智谱 AI 公司于2023训练的语言模型。')}${this.$L('我的任务是针对用户的问题和要求提供适当的答复和支持。')}`
+                },
+                {
+                    value: "wenxin",
+                    label: "Wenxin",
+                    src: $A.mainUrl('avatar/%E6%96%87%E5%BF%83.png'),
+                    desc: this.$L('我是文心一言，英文名是ERNIE Bot。我能够与人对话互动，回答问题，协助创作，高效便捷地帮助人们获取信息、知识和灵感。')
+                },
+                {
+                    value: "qianwen",
+                    label: "Qianwen",
+                    src: $A.mainUrl('avatar/%E9%80%9A%E4%B9%89%E5%8D%83%E9%97%AE.png'),
+                    desc: this.$L('我是达摩院自主研发的超大规模语言模型，能够回答问题、创作文字，还能表达观点、撰写代码。')
+                },
+            ],
+            aibotTabAction: "opanai",
+            aibotShow: false,
+            aibotType: 1,
+            aibotDialogSearchLoad: "",
         }
     },
 
@@ -638,22 +760,23 @@ export default {
             if (userIsAdmin) {
                 array.push(...[
                     {path: 'personal', name: '个人设置', divided: true},
+                    {path: 'workReport', name: '工作报告', divided: true},
+                    {path: 'approve', name: '审批中心', divided: true},
                     {path: 'system', name: '系统设置'},
-                    {path: 'license', name: 'License Key'},
-
+                    { path: "mail", name: "邮件通知"},
+                    { path: "robot", name: "AI 机器人"},
+                    {path: 'license', name: '授权管理'},
                     {path: 'version', name: '更新版本', divided: true, visible: !!this.clientNewVersion},
-
-                    {path: 'allProject', name: '所有项目', divided: true},
+                    // {path: 'allProject', name: '所有项目', divided: true},
                     {path: 'archivedProject', name: '已归档的项目'},
-
                     {path: 'team', name: '团队管理', divided: true},
                     // {path: 'complaint', name: '举报管理'},
                 ])
             } else {
                 array.push(...[
                     {path: 'personal', name: '个人设置', divided: true},
-                    {path: 'version', name: '更新版本', divided: true, visible: !!this.clientNewVersion},
-
+                    {path: 'approve', name: '审批中心', divided: true},
+                    // {path: 'version', name: '更新版本', divided: true, visible: !!this.clientNewVersion},
                     {path: 'workReport', name: '工作报告', divided: true},
                     {path: 'archivedProject', name: '已归档的项目'},
                 ])
@@ -842,6 +965,15 @@ export default {
                     if (this.menu.findIndex((m) => m.path == path) > -1) {
                         this.goForward({name: 'manage-approve'});
                     }
+                    return;
+                case 'mail':
+                    this.mailType = 1;
+                    this.mailShow = true;
+                    return;
+                case 'robot':
+                    this.aibotType = 1;
+                    this.aibotTabAction = "opanai";
+                    this.aibotShow = true;
                     return;
                 case 'okrManage':
                 case 'okrAnalyze':

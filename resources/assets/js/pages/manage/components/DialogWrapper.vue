@@ -92,9 +92,6 @@
                                 <EDropdownItem command="openCreate">
                                     <div>{{$L('创建群组')}}</div>
                                 </EDropdownItem>
-                                <EDropdownItem v-if="dialogData.bot == 0" command="report">
-                                    <div>{{$L('举报投诉')}}</div>
-                                </EDropdownItem>
                             </template>
                             <template v-else>
                                 <EDropdownItem command="groupInfo">
@@ -107,9 +104,6 @@
                                     <EDropdownItem v-if="dialogData.group_type === 'all' && userIsAdmin" command="modifyAdmin">
                                         <div>{{$L('修改资料')}}</div>
                                     </EDropdownItem>
-                                    <EDropdownItem command="report">
-                                        <div>{{$L('举报投诉')}}</div>
-                                    </EDropdownItem>
                                     <EDropdownItem command="exit">
                                         <div style="color:#f00">{{$L('退出群组')}}</div>
                                     </EDropdownItem>
@@ -120,9 +114,6 @@
                                     </EDropdownItem>
                                     <EDropdownItem command="transfer">
                                         <div>{{$L('转让群主')}}</div>
-                                    </EDropdownItem>
-                                    <EDropdownItem command="report">
-                                        <div>{{$L('举报投诉')}}</div>
                                     </EDropdownItem>
                                     <EDropdownItem command="disband">
                                         <div style="color:#f00">{{$L('解散群组')}}</div>

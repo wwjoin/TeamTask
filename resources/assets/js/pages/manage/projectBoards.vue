@@ -24,7 +24,7 @@
             <div class="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4" style="padding: 16px 32px"
             >
                 <div class="card shadow-none" v-for="(item, index) in list" :key="index" @click="toggleRoute('project', {projectId: item.id})">
-                    <div class="flex flex-1 flex-col justify-between rounded-lg  p-4 dark:bg-transparent sm:p-5"
+                    <div class="flex flex-1 flex-col justify-between rounded-lg  p-4 dark:bg-transparent sm:p-5" style="border: 1px solid rgb(243, 243, 243);"
                     >
                         <div>
                             <div class="flex items-start justify-between">
@@ -376,8 +376,8 @@ export default {
                 data: {
                     // keys: this.keys,
                     all: 1,
-                    // archived:no,
-                    // type,
+                    archived:"all",
+                    type:"all"
                     // page: Math.max(this.page, 1),
                     // pagesize: Math.max($A.runNum(this.pageSize), 10),
                 },
